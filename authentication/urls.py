@@ -3,6 +3,8 @@ from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views import RegistrationAPIView, EmailVerificationAPIView, LoginAPIView, LogoutAPIView, CustomTokenObtainPairView
 
+app_name = 'authentication'
+
 urlpatterns = [
     path('register/', RegistrationAPIView.as_view(), name='user_registration'),
     path('verify-email/<uidb64>/<token>/', EmailVerificationAPIView.as_view(), name='user_verification'),

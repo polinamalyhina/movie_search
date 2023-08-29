@@ -11,8 +11,8 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from core.schemas import register_request_schema, register_response_schema, \
-    activation_response_schema, login_response_schema, login_request_schema, logout_response_schema
+from core.schemas import register_response_schema, \
+    activation_response_schema, login_response_schema, logout_response_schema
 from .exceptions import EmailSendingError, AlreadyVerifiedError, InvalidTokenError, InvalidEmailOrPasswordError, \
     DoesNotActiveError, DoesNotExistError
 from .models import CustomUser
