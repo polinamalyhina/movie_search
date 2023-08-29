@@ -17,8 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from core.swagger import staff_protected_schema_view
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', staff_protected_schema_view, name='schema-swagger-ui'),
     path('api/v1/movies/', include('movies.urls', namespace='movies')),
-
 ]

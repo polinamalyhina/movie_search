@@ -17,7 +17,7 @@ class MoviesView(APIView):
             201: movies_response_data_schema,
             400: 'Bad Request',
         },
-        tags=["auth"],
+        tags=["api"],
         security=[],
     )
     def get(self, request):
