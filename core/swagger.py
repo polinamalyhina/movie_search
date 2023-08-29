@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Study project API",
+        title="Backend for movie-search tool",
         default_version='v1',
         description="Test assignment for Workbounce",
         contact=openapi.Contact(email="polja.malygina@gmail.com"),

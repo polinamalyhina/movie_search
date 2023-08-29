@@ -25,3 +25,39 @@ movies_response_data_schema = openapi.Schema(
         ),
     },
 )
+
+register_response_schema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        "email": openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_EMAIL, description="User email"),
+        "username": openapi.Schema(type=openapi.TYPE_STRING, description="Username"),
+    },
+    required=["email", "username"],
+)
+
+activation_response_schema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        "message": openapi.Schema(type=openapi.TYPE_STRING, description="Message about email verification"),
+        "refresh": openapi.Schema(type=openapi.TYPE_STRING, description="Refresh token"),
+        "access": openapi.Schema(type=openapi.TYPE_STRING, description="Access token"),
+    },
+    required=["email", "password"],
+)
+
+login_response_schema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        "refresh": openapi.Schema(type=openapi.TYPE_STRING, description="The JWT refresh token"),
+        "access": openapi.Schema(type=openapi.TYPE_STRING, description="The JWT access token"),
+    },
+    required=["refresh", "access"]
+)
+
+logout_response_schema = openapi.Schema(
+    type=openapi.TYPE_OBJECT,
+    properties={
+        "message": openapi.Schema(type=openapi.TYPE_STRING, description="Message about logout"),
+    },
+    required=["refresh", "access"]
+)

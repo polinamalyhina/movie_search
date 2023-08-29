@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -44,15 +45,18 @@ INSTALLED_APPS = [
     # 3rd party
     'drf_yasg',
     'rest_framework',
+    "corsheaders",
 
     # user apps
     'movies.apps.MoviesConfig',
+    'authentication.apps.AuthenticationConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -85,8 +89,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', "postgres"),
+        'USER': os.getenv('POSTGRES_USER', "postgres"),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', "postgres_pass"),
+        'HOST': os.getenv('POSTGRES_HOST', "postgres_service"),
+        'PORT': os.getenv('POSTGRES_DB_PORT', '')
     }
 }
 
@@ -121,32 +129,73 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+ACCESS_TOKEN_LIFETIME = timedelta(days=1)
+REFRESH_TOKEN_LIFETIME = timedelta(days=5)
+
+SIMPLE_JWT = {
+        'ACCESS_TOKEN_LIFETIME': ACCESS_TOKEN_LIFETIME,
+        'REFRESH_TOKEN_LIFETIME': REFRESH_TOKEN_LIFETIME,
+}
+
+
 REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser',
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
 }
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+AUTH_USER_MODEL = "authentication.CustomUser"
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = True
+
+BASE_URL = os.getenv("BASE_URL", "")
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:9000",
+]
+
+REDIS_HOST = os.getenv("REDIS_HOST", "redis_container_service")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
+
+CELERY_BROKER_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0"
+CELERY_RESULT_BACKEND = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+
 SWAGGER_SETTINGS = {
-    'FORM_METHOD': 'POST',
-    "USE_SESSION_AUTH": False,
-    "SECURITY_DEFINITIONS": {
-        "Token Auth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
+   'FORM_METHOD': 'POST',
+   "USE_SESSION_AUTH": False,
+   "SECURITY_DEFINITIONS": {
+       "Token Auth": {
+           "type": "apiKey",
+           "name": "Authorization",
+           "in": "header"
         }
     }
 }

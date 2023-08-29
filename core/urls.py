@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', staff_protected_schema_view, name='schema-swagger-ui'),
     path('api/v1/movies/', include('movies.urls', namespace='movies')),
+    path('api/v1/authentication/', include('authentication.urls', namespace='authentication')),
 ]
