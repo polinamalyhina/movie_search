@@ -165,6 +165,7 @@ REST_FRAMEWORK = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 AUTH_USER_MODEL = "authentication.CustomUser"
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST', 'smtp.gmail.com')
@@ -180,21 +181,21 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:9000",
 ]
 
-SWAGGER_SETTINGS = {
-    'FORM_METHOD': 'POST',
-    "USE_SESSION_AUTH": False,
-    "SECURITY_DEFINITIONS": {
-        "Token Auth": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
-        }
-    }
-}
-
 REDIS_HOST = os.getenv("REDIS_HOST", "redis_container_service")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 
 CELERY_BROKER_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0"
 CELERY_RESULT_BACKEND = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}"
+
+SWAGGER_SETTINGS = {
+   'FORM_METHOD': 'POST',
+   "USE_SESSION_AUTH": False,
+   "SECURITY_DEFINITIONS": {
+       "Token Auth": {
+           "type": "apiKey",
+           "name": "Authorization",
+           "in": "header"
+        }
+    }
+}
