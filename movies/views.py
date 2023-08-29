@@ -1,15 +1,25 @@
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from core.dependencies import DependencyContainer
+from core.schemas import movies_response_data_schema
 from .exceptions import ExternalAPIServerError, MovieNotFoundError, InvalidOffsetOrLimitError, PageOutOfRangeError
 from .serializers import MovieDTOSerializer
 from .utils import NavigationHelper
 
 
 class MoviesView(APIView):
-
+    @swagger_auto_schema(
+        operation_description="Get movies",
+        responses={
+            201: movies_response_data_schema,
+            400: 'Bad Request',
+        },
+        tags=["auth"],
+        security=[],
+    )
     def get(self, request):
         offset, limit, query = self._get_pagination_args(request)
 
